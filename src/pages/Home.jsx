@@ -26,24 +26,19 @@ const Hero = () => (
           transition={{ duration: 0.6 }}
           className="grid gap-10 md:grid-cols-[1.25fr_0.75fr] items-center"
         >
-          {/* Left: text */}
           <div className="grid gap-6">
-            <span className="inline-flex items-center gap-2 text-xs uppercase tracking-wider text-white/70">
-              <Star size={14} className="opacity-60" /> Junior Full-Stack
-              Developer
+            <span className="inline-flex items-center gap-2 text-m uppercase tracking-wider text-white/70">
+              <Star size={20} className="opacity-60" /> Junior
+              Full-Stack/Backend Developer
             </span>
             <h1 className="text-3xl md:text-5xl font-extrabold leading-tight">
               Oranut Suphatamat (Dao)
             </h1>
-            <p className="max-w-2xl text-white/80">{profile.summaryEn}</p>
+            <p className="max-w-2xl text-white/80">
+              {profile.greetingContainer}
+            </p>
 
             <div className="flex flex-wrap gap-3 pt-2">
-              <FancyLink
-                className="btn-outline"
-                href={`mailto:${profile.contacts.email}`}
-              >
-                <Mail size={16} /> Email
-              </FancyLink>
               <FancyLink
                 className="btn-outline"
                 href={profile.contacts.github}
@@ -67,7 +62,6 @@ const Hero = () => (
             </div>
           </div>
 
-          {/* Right: portrait */}
           <motion.div
             className="relative mx-auto w-40 h-40 md:w-64 md:h-64"
             initial={{ scale: 0.95, opacity: 0 }}
@@ -75,7 +69,6 @@ const Hero = () => (
             whileHover={{ scale: 1.02 }}
             transition={{ type: "spring", stiffness: 260, damping: 20 }}
           >
-            {/* glow behind */}
             <div
               aria-hidden
               className="absolute -inset-4 rounded-full blur-2xl opacity-60"
@@ -84,10 +77,10 @@ const Hero = () => (
                   "radial-gradient(60% 60% at 30% 20%, rgba(124,77,255,.45), transparent 60%), radial-gradient(70% 70% at 80% 30%, rgba(0,229,255,.25), transparent 60%)",
               }}
             />
-            {/* image */}
+
             <img
               src={profile.photo || "/dao.jpg"}
-              alt="Oranut “Dao” Suphatamat"
+              alt="Oranut Sphatamat"
               className="relative z-[1] w-full h-full object-cover rounded-full border border-white/20 shadow-[0_10px_40px_rgba(0,0,0,.45)]"
               loading="eager"
             />
@@ -103,7 +96,7 @@ const Hero = () => (
 const About = () => (
   <Section id="about" title="About">
     <div className="card">
-      <p className="text-white/85">{profile.summaryTh}</p>
+      <p className="text-white/85">{profile.about}</p>
     </div>
   </Section>
 );

@@ -1,7 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
-/* ===== Starfield: reuse same layers as Home ===== */
+import {
+  profile,
+  skills,
+  projects,
+  experience,
+  education,
+  certification,
+} from "../data.js";
+
 function Starfield() {
   const shooters = Array.from({ length: 7 }).map((_, i) => {
     const delay = (Math.random() * 8).toFixed(2) + "s";
@@ -29,53 +37,8 @@ function Starfield() {
 
 const promptLabel = "Oranut_s Portfolio";
 
-/* ===== Data ===== */
-const projects = [
-  {
-    name: "HugPaw — Pet Supply E-commerce (Group project in Generations Bootcamp)",
-    period: "Aug 2025",
-    description:
-      "E-commerce platform for customizable pet accessories (collars, feeders, and water dispensers) with a clean, responsive UI and basic admin capabilities.",
-    tech: ["React", "Node.js/Express", "MongoDB", "Tailwind", "Github"],
-    highlights: [
-      "JWT-based authentication (login/logout) with HTTP-only cookies and bcrypt password hashing",
-      "Protected routes and centralized auth middleware across account, cart, and checkout flows",
-      "Basic authorization guards (admin vs. user) with consistent error handling",
-    ],
-    links: { demo: "#", repo: "#" },
-  },
-  {
-    name: "RAG-Diary — Personal Diary App",
-    period: "Aug 2025",
-    description:
-      "A secure personal diary for structured, searchable journaling with a fast, distraction-free UI.",
-    tech: ["React", "Node.js/Express", "MongoDB", "Tailwind"],
-    highlights: [
-      "JWT-based authentication (login/logout) using HTTP-only cookies and bcrypt password hashing",
-      "Protected routes and role-aware authorization for account-specific data",
-      "Diary entries CRUD with tags, pinning, and keyword search",
-      "Responsive layout optimized for mobile and desktop",
-    ],
-    links: { demo: "#", repo: "#" },
-  },
-  {
-    name: "Treats & Whiskers (Low–Mid Weight Board Game)",
-    period: "Aug 2025 (In development — Phase 1)",
-    description:
-      "A cat-themed, low-to-mid weight strategy board game. The web prototype is currently focused on Phase 1: building interactive, stateful components.",
-    tech: ["React", "Vite", "Tailwind"],
-    highlights: [
-      "Phase 1 Implement component logic and stateful interactions: non-repeating deck shuffle and deck-empty notification (in progress)",
-      "Phase 2 Compose components and run the end-to-end game flow (planned)",
-      "Phase 3 Optimize UX, UI, and overall web performance (planned)",
-    ],
-    links: { demo: "#", repo: "#" },
-  },
-];
-
-/* ===== Helpers: table & formatting ===== */
 const slugify = (s) =>
-  s
+  String(s)
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
@@ -83,30 +46,44 @@ const slugify = (s) =>
 const truncate = (str = "", w = 40) =>
   str.length > w ? str.slice(0, w - 1) + "…" : str;
 
-function renderTable(headers, rows) {
-  // calc widths
-  const widths = headers.map((h, i) =>
-    Math.max(h.length, ...rows.map((r) => String(r[i] ?? "").length))
-  );
-  // cap some columns a bit for readability
-  // [ID, Name, Period, Demo, Repo]
-  if (headers.length === 5) {
-    widths[0] = Math.min(widths[0], 3); // ID
-    widths[1] = Math.min(widths[1], 44); // Name
-    widths[2] = Math.min(widths[2], 22); // Period
-    widths[3] = Math.min(widths[3], 28); // Demo
-    widths[4] = Math.min(widths[4], 28); // Repo
+// รองรับ "quoted strings"
+function tokenize(line) {
+  const tokens = [];
+  let cur = "";
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') {
+      inQuotes = !inQuotes;
+      continue;
+    }
+    if (!inQuotes && /\s/.test(ch)) {
+      if (cur) tokens.push(cur), (cur = "");
+    } else {
+      cur += ch;
+    }
   }
+  if (cur) tokens.push(cur);
+  return tokens;
+}
+
+/** ตาราง compact สำหรับรายชื่อโปรเจกต์ (ให้พอดีกับเทอร์มินัล) */
+function renderTable(headers, rows) {
+  // [ID, Name, Period, Demo, Repo] — caps แบบกระชับ
+  const caps = [3, 28, 14, 20, 20]; // รวม ~85 คอลัมน์ (ก่อนช่องว่าง/เส้นแบ่ง)
+  const widths = headers.map((h, i) =>
+    Math.min(
+      Math.max(h.length, ...rows.map((r) => String(r[i] ?? "").length)),
+      caps[i] ?? 24
+    )
+  );
 
   const sep = "+" + widths.map((w) => "-".repeat(w + 2)).join("+") + "+";
-
   const fmtRow = (cols) =>
     "| " +
     cols
-      .map((c, i) => {
-        const txt = truncate(String(c ?? ""), widths[i]);
-        return txt.padEnd(widths[i], " ");
-      })
+      .map((c, i) => String(c ?? ""))
+      .map((txt, i) => truncate(txt, widths[i]).padEnd(widths[i], " "))
       .join(" | ") +
     " |";
 
@@ -116,34 +93,48 @@ function renderTable(headers, rows) {
   return lines.join("\n");
 }
 
+/** ตารางรายละเอียดโปรเจกต์ (compact) */
 function projectTable(p, idx) {
+  const safe = (v) => (v == null ? "—" : String(v));
+  const demo = p?.links?.demo && p.links.demo !== "#" ? p.links.demo : "—";
+  const repo = p?.links?.repo && p.links.repo !== "#" ? p.links.repo : "—";
+
   const headers = ["Field", "Value"];
   const rows = [
     ["ID", `#${idx + 1}`],
-    ["Name", p.name],
-    ["Period", p.period],
-    ["Tech", p.tech.join(", ")],
-    ["Description", p.description],
-    ["Highlights", p.highlights.join("; ")],
-    ["Demo", p.links?.demo || "—"],
-    ["Repo", p.links?.repo || "—"],
+    ["Name", safe(p?.name)],
+    ["Period", safe(p?.period)],
+    ["Status", safe(p?.status)],
+    ["Tech", Array.isArray(p?.tech) ? p.tech.join(", ") : safe(p?.tech)],
+    ["Desc", safe(p?.description)],
+    [
+      "Highlights",
+      Array.isArray(p?.highlights)
+        ? p.highlights.join("; ")
+        : safe(p?.highlights),
+    ],
+    ["Demo", demo],
+    ["Repo", repo],
   ];
-  // compute widths with a softer cap
-  const widths = [
+
+  const capKey = 10; // ความกว้างคอลัมน์ Field
+  const capVal = 68; // ความกว้างคอลัมน์ Value
+  const widthKey = Math.min(
     Math.max(headers[0].length, ...rows.map((r) => r[0].length)),
-    Math.max(headers[1].length, ...rows.map((r) => r[1].length)),
-  ];
-  widths[0] = Math.min(widths[0], 12);
-  widths[1] = Math.min(widths[1], 90);
+    capKey
+  );
+  const widthVal = Math.min(
+    Math.max(headers[1].length, ...rows.map((r) => String(r[1]).length)),
+    capVal
+  );
 
   const sep =
-    "+" + "-".repeat(widths[0] + 2) + "+" + "-".repeat(widths[1] + 2) + "+";
-
+    "+" + "-".repeat(widthKey + 2) + "+" + "-".repeat(widthVal + 2) + "+";
   const fmt = (a, b) =>
-    `| ${a.padEnd(widths[0], " ")} | ${truncate(b, widths[1]).padEnd(
-      widths[1],
-      " "
-    )} |`;
+    `| ${truncate(a, widthKey).padEnd(widthKey, " ")} | ${truncate(
+      String(b),
+      widthVal
+    ).padEnd(widthVal, " ")} |`;
 
   const out = [
     sep,
@@ -155,26 +146,98 @@ function projectTable(p, idx) {
   return out.join("\n");
 }
 
-/* ===== Pretty color render ===== */
+/* ===== Help (ตัดคำสั่งตามที่ขอ) ===== */
 const helpRows = [
-  ["help", "Show this help"],
-  ["clear", "Clear the screen"],
+  ["help [cmd]", "Show help (or detailed help for a command)"],
+  ["clear / cls", "Clear the screen (Ctrl+L also works)"],
   ["pwd", "Print working directory"],
-  ["ls [projects]", "List items (or projects)"],
-  ["whoami", "Show user"],
+  ["cd <path>", "Change directory (simulated)"],
+  ["ls [projects|skills|files]", "List directory or portfolio sections"],
   ["date", "Show current date/time"],
-  ["echo <text>", "Print text"],
+  ["echo <text>", 'Print text (supports "quoted strings")'],
   ["projects", "List project IDs and names"],
   ["project <id|slug>", "Show project details (as table)"],
-  ["tech", "Show unique tech across projects"],
   ["open <demo|repo> <id>", "Show link for a project"],
+  ["skills", "Show grouped skills"],
+  ["history", "Show recent commands (use ↑ / ↓ to navigate)"],
 ];
+
+const commandDocs = {
+  help: {
+    usage: "help [command]",
+    desc: "Show general help or detailed docs for a specific command.",
+    examples: ["help", "help project", "help open"],
+  },
+  clear: {
+    usage: "clear",
+    desc: "Clear terminal output.",
+    examples: ["clear"],
+  },
+  cls: { usage: "cls", desc: "Alias of clear.", examples: ["cls"] },
+  pwd: { usage: "pwd", desc: "Print working directory.", examples: ["pwd"] },
+  cd: {
+    usage: "cd <path>",
+    desc: "Change directory (simulated).",
+    examples: ["cd /home/dao", "cd .."],
+  },
+  ls: {
+    usage: "ls [projects|skills|files]",
+    desc: "List items in current directory or portfolio sections.",
+    examples: ["ls", "ls projects", "ls files"],
+  },
+  date: { usage: "date", desc: "Show current date/time.", examples: ["date"] },
+  echo: {
+    usage: "echo <text>",
+    desc: 'Print text to output. Supports "quoted strings".',
+    examples: ["echo Hello", 'echo "Hello World"'],
+  },
+  projects: {
+    usage: "projects",
+    desc: "List all projects with IDs and quick links (demo/repo).",
+    examples: ["projects"],
+  },
+  project: {
+    usage: "project <id|slug>",
+    desc: "Show project details in table format by ID (1-based) or slug.",
+    examples: ["project 1", "project treats-and-whiskers-web-prototype"],
+  },
+  open: {
+    usage: "open <demo|repo> <id>",
+    desc: "Print demo or repo link by project ID.",
+    examples: ["open demo 2", "open repo 1"],
+  },
+  skills: {
+    usage: "skills",
+    desc: "Show grouped skills.",
+    examples: ["skills"],
+  },
+  history: {
+    usage: "history",
+    desc: "Show command history.",
+    examples: ["history"],
+  },
+};
+
+/* ===== Fake FS (ให้สอดคล้องกับคำสั่งที่เหลือ) ===== */
+const FS = {
+  "/": ["home", "projects", "files"],
+  "/home": ["dao"],
+  "/home/dao": [], // ไม่มีไฟล์ให้ cat แล้ว
+  "/projects": projects.map((_, i) => `#${i + 1}`),
+  "/files": ["resume.pdf (not real)", "readme.md (not real)"],
+};
 
 export default function Terminal() {
   const [input, setInput] = useState("");
   const [output, setOutput] = useState(
-    ["Welcome to Dao's Terminal.", "Type 'help' to get started."].join("\n")
+    [
+      "Welcome to Dao's Terminal.",
+      "Type 'help' to get started. Tip: use ↑ / ↓ to navigate command history.",
+    ].join("\n")
   );
+  const [history, setHistory] = useState([]);
+  const [histIdx, setHistIdx] = useState(-1);
+  const [cwd, setCwd] = useState("/home/dao");
   const outRef = useRef(null);
 
   useEffect(() => {
@@ -183,16 +246,80 @@ export default function Terminal() {
     }
   }, [output]);
 
+  const prefix = () => `$ ${promptLabel} `;
+  const prompt = () => `${cwd}$`;
+
+  const listDir = (path) => {
+    const p = path || cwd;
+    const items = FS[p];
+    if (!items) return `ls: cannot access '${p}': No such file or directory`;
+    return items.join("  ");
+  };
+
+  const resolvePath = (path) => {
+    if (!path) return cwd;
+    if (path.startsWith("/")) return path;
+    if (path === "~") return "/home/dao";
+    const parts = (cwd + "/" + path).split("/").filter(Boolean);
+    const stack = [];
+    for (const part of parts) {
+      if (part === ".") continue;
+      if (part === "..") stack.pop();
+      else stack.push(part);
+    }
+    return "/" + stack.join("/");
+  };
+
   const handleKeyDown = (e) => {
+    // Ctrl+L to clear
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "l") {
+      e.preventDefault();
+      setOutput("");
+      return;
+    }
+
+    // history nav
+    if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+      e.preventDefault();
+      if (history.length === 0) return;
+      let nextIdx = histIdx;
+      if (e.key === "ArrowUp") {
+        nextIdx =
+          histIdx === -1 ? history.length - 1 : Math.max(0, histIdx - 1);
+      } else {
+        if (histIdx === -1) return;
+        nextIdx = histIdx + 1;
+        if (nextIdx >= history.length) {
+          setHistIdx(-1);
+          setInput("");
+          return;
+        }
+      }
+      setHistIdx(nextIdx);
+      setInput(history[nextIdx] || "");
+      return;
+    }
+
+    // execute
     if (e.key !== "Enter") return;
     const raw = input;
     const line = raw.trim();
-    const tokens = line.split(/\s+/);
+    const tokens = tokenize(line);
     const cmd = (tokens[0] || "").toLowerCase();
     const args = tokens.slice(1);
 
-    const prefix = `$ ${promptLabel} `;
-    let newOutput = output + `\n${prefix}${raw}\n`;
+    let newOutput = output + `\n${prefix()}${prompt()} ${raw}\n`;
+
+    // store history
+    if (raw) {
+      setHistory((prev) => {
+        const next = [...prev];
+        if (next[next.length - 1] !== raw) next.push(raw);
+        if (next.length > 100) next.shift();
+        return next;
+      });
+    }
+    setHistIdx(-1);
 
     if (!cmd) {
       setOutput(newOutput);
@@ -200,49 +327,112 @@ export default function Terminal() {
       return;
     }
 
+    const printHelpList = () => {
+      const widest = Math.max(...helpRows.map(([c]) => c.length));
+      const rows = helpRows
+        .map(([c, d]) => `  ${c.padEnd(widest)}  ${d}`)
+        .join("\n");
+      return (
+        "Available commands:\n" +
+        rows +
+        "\nTip: type 'help <command>' for details."
+      );
+    };
+
     switch (cmd) {
       case "help": {
-        const widest = Math.max(...helpRows.map(([c]) => c.length));
-        const rows = helpRows
-          .map(([c, d]) => `  ${c.padEnd(widest)}  ${d}`)
-          .join("\n");
-        newOutput += "Available commands:\n" + rows;
+        if (args[0]) {
+          const q = args[0].toLowerCase();
+          const doc = commandDocs[q];
+          if (!doc) {
+            newOutput += `No detailed help for '${args[0]}'. Type 'help' to see all commands.`;
+            break;
+          }
+          newOutput += [
+            `Available commands (detailed):`,
+            `  ${q}`,
+            `  - Usage: ${doc.usage}`,
+            `  - Description: ${doc.desc}`,
+            `  - Examples:`,
+            ...doc.examples.map((ex) => `      ${ex}`),
+          ].join("\n");
+        } else {
+          newOutput += printHelpList();
+        }
         break;
       }
+
       case "clear":
+      case "cls": {
         setOutput("");
         setInput("");
         return;
-      case "pwd":
-        newOutput += "/home/dao";
+      }
+
+      case "pwd": {
+        newOutput += cwd;
         break;
-      case "ls":
-        newOutput +=
-          args[0] && args[0].toLowerCase() === "projects"
-            ? projects.map((p, i) => `[${i + 1}] ${p.name}`).join("\n")
-            : "projects  about.txt  contact.txt";
+      }
+
+      case "cd": {
+        if (!args[0]) {
+          setCwd("/home/dao");
+          break;
+        }
+        const target = resolvePath(args[0]);
+        if (!FS[target]) {
+          newOutput += `cd: no such file or directory: ${args[0]}`;
+          break;
+        }
+        setCwd(target);
         break;
-      case "whoami":
-        newOutput += "Oranut (Dao)";
+      }
+
+      case "ls": {
+        const scope = args[0]?.toLowerCase();
+        if (!scope) {
+          newOutput += listDir();
+          break;
+        }
+        if (["projects", "skills", "files"].includes(scope)) {
+          if (scope === "projects") {
+            newOutput += projects
+              .map((p, i) => `[${i + 1}] ${p.name}`)
+              .join("\n");
+          } else if (scope === "skills") {
+            newOutput += skills.map((g) => `- ${g.group}`).join("\n");
+          } else if (scope === "files") {
+            newOutput += listDir("/files");
+          }
+        } else {
+          newOutput += listDir(resolvePath(scope));
+        }
         break;
-      case "date":
+      }
+
+      case "date": {
         newOutput += new Date().toString();
         break;
-      case "echo":
+      }
+
+      case "echo": {
         newOutput += args.length ? args.join(" ") : "";
         break;
+      }
+
       case "projects": {
         const headers = ["ID", "Name", "Period", "Demo", "Repo"];
         const rows = projects.map((p, i) => [
           i + 1,
           p.name,
-          p.period,
+          p.period || "—",
           p.links?.demo && p.links.demo !== "#" ? p.links.demo : "—",
           p.links?.repo && p.links.repo !== "#" ? p.links.repo : "—",
         ]);
         newOutput += renderTable(headers, rows);
         break;
       }
+
       case "project": {
         if (!args[0]) {
           newOutput += "Usage: project <id|slug>";
@@ -255,6 +445,13 @@ export default function Terminal() {
           if (projects[n]) idx = n;
         } else {
           idx = projects.findIndex((p) => slugify(p.name) === key);
+          if (idx === -1) {
+            // relaxed slug
+            const soft = key.replace(/[^a-z]+/g, "");
+            idx = projects.findIndex(
+              (p) => slugify(p.name).replace(/[^a-z]+/g, "") === soft
+            );
+          }
         }
         newOutput +=
           idx === -1
@@ -262,13 +459,8 @@ export default function Terminal() {
             : projectTable(projects[idx], idx);
         break;
       }
-      case "tech": {
-        const set = new Set(projects.flatMap((p) => p.tech));
-        newOutput += Array.from(set).join(", ");
-        break;
-      }
+
       case "open": {
-        // open <demo|repo> <id>
         const kind = (args[0] || "").toLowerCase();
         const idArg = args[1];
         if (!["demo", "repo"].includes(kind) || !idArg) {
@@ -284,8 +476,35 @@ export default function Terminal() {
         newOutput += `${kind.toUpperCase()} -> ${url}`;
         break;
       }
-      default:
+
+      case "skills": {
+        // แสดงเป็นกลุ่มแบบกระชับ จาก data.js
+        newOutput += skills
+          .map(
+            (g) =>
+              `- ${g.group}: ${
+                Array.isArray(g.items) ? g.items.join(", ") : ""
+              }`
+          )
+          .join("\n");
+        break;
+      }
+
+      case "history": {
+        if (history.length === 0) {
+          newOutput += "No history yet.";
+          break;
+        }
+        const lines = [...history]
+          .slice(-20)
+          .map((h, i, a) => `${a.length - (a.length - i) + 1}. ${h}`);
+        newOutput += lines.join("\n");
+        break;
+      }
+
+      default: {
         newOutput += `command not found: ${cmd}\nType 'help' for available commands.`;
+      }
     }
 
     setOutput(newOutput);
@@ -293,19 +512,23 @@ export default function Terminal() {
   };
 
   const renderOutput = (text) => {
-    const prefix = `$ ${promptLabel} `;
+    const pfx = `$ ${promptLabel} ${cwd}$ `;
     return text.split("\n").map((line, i) => {
-      if (line.startsWith(prefix)) {
-        const cmd = line.slice(prefix.length);
+      if (line.startsWith(pfx)) {
+        const cmd = line.slice(pfx.length);
         return (
           <div key={i} className="terminal-line">
             <span className="text-green-400">$</span>{" "}
             <span className="text-blue-300">{promptLabel}</span>{" "}
+            <span className="text-white">{`${cwd}$`}</span>{" "}
             <span className="text-white">{cmd}</span>
           </div>
         );
       }
-      if (line.startsWith("Available commands:")) {
+      if (
+        line.startsWith("Available commands:") ||
+        line.startsWith("Available commands (detailed):")
+      ) {
         return (
           <div
             key={i}
@@ -372,7 +595,7 @@ export default function Terminal() {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               className="flex-1 terminal-input"
-              placeholder="Type a command (try: help)"
+              placeholder="Type a command (try: help, projects, open)"
               autoFocus
             />
           </div>

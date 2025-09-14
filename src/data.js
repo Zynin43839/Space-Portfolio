@@ -1,13 +1,13 @@
 export const profile = {
   name: "Oranut Suphatamat",
   nickname: "Dao",
-  title: "Junior Full-Stack Developer",
+  title: "Junior Full-Stack/Backend Developer",
   location: "Bangkok, Thailand",
   photo: "dao.png",
-  summaryTh:
-    "Technically, I work with Node.js/Express, REST APIs, MongoDB/SQL, React, and Git with a focus on clean, maintainable code. Relevant projects include HugPaw (e-commerce), where I designed the data schema and implemented the navigation bar and login page, including a register page with design API of front-end and back-end, as well as a real-time board-game web app using Socket.io with stable data flows. I am currently up skilling in Golang, Next.js/NestJS and AWS to support production-grade systems more effectively.",
-  summaryEn:
-    "Hi, I’m interested in a Backend/Full-Stack Developer role, transitioning from biotechnology to software development, and recently completed the Generation Thailand Junior Software Developer program. I bring research-driven systems thinking and coordination experience, helping me collaborate across functions and communicate technical trade-offs clearly in fast-moving teams.",
+  greetingContainer:
+    "Hi, I’m Dao a Junior Software Developer with a unique journey transitioning from biotechnology to tech. I’m passionate about building reliable web application and recently graduated from the Generation Thailand Junior Software Developer program. With a mix of research-driven problem solving and project coordination experience, I love collaborating in fast-moving teams and making complex technical trade-offs clear for everyone.",
+  about:
+    "I work mainly with Node.js/Express, REST APIs, MongoDB/SQL, React, and Git, always focusing on writing clean and maintainable code. Some of my key projects include HugPaw, an e-commerce platform where I designed the users data schema and implemented navigation, login, and register features, and a A real-time board-game web app using Socket.io with stable data flows. So far, I’ve completed Phase 1: implementing component logic and stateful interactions. Currently, I’m working on the first game logic feature: a non-repeating deck shuffle with deck-empty notification (in progress). Right now, I’m up skilling in Golang, Next.js/NestJS, and AWS to strengthen my ability to deliver production-grade systems. My future goal is to grow into a Backend/Full-Stack Developer role where I can contribute to scalable products while continuously learning and exploring new technologies.",
   contacts: {
     email: "Oranut_s@kkumail.com",
     github: "https://github.com/Zynin43839",
@@ -43,7 +43,14 @@ export const projects = [
     period: "Aug 2025",
     description:
       "An online storefront for customizable pet gear—collars, feeders, and water dispensers—with a polished, responsive UI and core admin tooling.",
-    tech: ["React", "Node.js/Express", "MongoDB", "Tailwind", "Github"],
+    tech: [
+      "React",
+      "Node.js/Express",
+      "MongoDB",
+      "Tailwind",
+      "Github",
+      "ShardCn",
+    ],
     highlights: [
       "Session-secure auth (login/logout) using JWT with HTTP-only cookies; credentials hashed via bcrypt",
       "Route guarding with shared auth middleware spanning account, cart, and checkout pipelines",
@@ -59,7 +66,7 @@ export const projects = [
     period: "Aug 2025",
     description:
       "A privacy-first journaling app for structured entries and fast search, presented in a clean, distraction-free interface.",
-    tech: ["React", "Node.js/Express", "MongoDB", "Tailwind"],
+    tech: ["React", "Node.js/Express", "MongoDB", "Tailwind", "ShardCn"],
     highlights: [
       "JWT login/logout with HTTP-only cookies and bcrypt-hashed passwords",
       "Account-scoped, role-aware authorization with protected routes",
@@ -99,11 +106,11 @@ export const experience = [
       "Coordinated cross-functional teams to prepare learning and technical documents.",
       "Designed and reviewed training worksheets and internal reports.",
       "Maintained version control and documentation workflows.",
-      "Supported communication between educators and project stakeholders.",
+      "Supported communication between team and project stakeholders.",
     ],
   },
   {
-    role: "Research Assistant & Writer (Freelance)",
+    role: "Research Assistant & Writer (Fastwork)",
     org: "Remote",
     period: "Jun 2023 – Jun 2025",
     bullets: [
@@ -115,29 +122,49 @@ export const experience = [
 
 export const education = [
   {
-    degree: "Master of Science in Biotechnology (GPA 3.30)",
+    degree: "Master of Science (M.Sc.) in Biotechnology",
     school: "Khon Kaen University, Thailand",
-    extras: ["Graduated: July 2022"],
+    extras: [
+      "GPA: 3.30",
+      "Graduated: July 2022",
+      "Faculty: Biotechnology",
+      "Thesis: Biochemical Methane Potential of Sugarcane Leaves and the Specific Methanogenic Activity of Unacclimatized and Acclimatized Anaerobic Mixed Cultures in Cow Dung and Rumen Fluid ",
+    ],
   },
   {
-    degree: "Bachelor of Science in Biotechnology (GPA 3.25)",
+    degree: "Bachelor of Science (B.Sc.) in Biotechnology",
     school: "Khon Kaen University, Thailand",
-    extras: ["Graduated: June 2020"],
+    extras: [
+      "GPA: 3.25",
+      "Graduated: June 2020",
+      "Faculty: Biotechnology",
+      "Project: Compared of ELISA technique and selective medium technique for detecting bacterial fruit bloth caused by Acidovorax citrulli. ",
+    ],
   },
 ];
 
 export const certification = [
   {
-    degree: "Junior Software Developer Boostcamp",
+    degree: "Junior Software Developer Bootcamp",
     school: "Generation Thailand",
     extras: [
-      "Completed: 2025",
-      "Focus: Web development, APIs, version control, teamwork",
+      "Completed: Sep 2025",
+      "Focus: Full-stack web development with Node.js, React, and MongoDB",
+      "Practical experience: Agile teamwork, building APIs, version control (Git/GitHub)",
     ],
   },
   {
-    degree: "MongoDB – From Relational Model (SQL) to MongoDB's Document Model",
-    school: "Certification",
-    extras: [],
+    degree: "MongoDB – From Relational Model (SQL) to Document Model",
+    school: "MongoDB University",
+    extras: [
+      "Completed: 2025",
+      "Focus: Transitioning from relational schemas to MongoDB’s flexible schema design",
+      "Hands-on: Data modeling, and query optimization",
+    ],
+  },
+  {
+    degree: "TOEIC (Listening & Reading)",
+    school: "ETS",
+    extras: ["Score: 570 / 990", "Assessed: Intermediate English proficiency"],
   },
 ];
