@@ -61,23 +61,23 @@ export const projects = [
       repo: "https://github.com/Izenberk/HugPaw-Ecommerce-Frontend",
     },
   },
-  {
-    name: "RAG-Diary — Personal Diary App",
-    period: "Aug 2025",
-    description:
-      "A privacy-first journaling app for structured entries and fast search, presented in a clean, distraction-free interface.",
-    tech: ["React", "Node.js/Express", "MongoDB", "Tailwind", "ShardCn"],
-    highlights: [
-      "JWT login/logout with HTTP-only cookies and bcrypt-hashed passwords",
-      "Account-scoped, role-aware authorization with protected routes",
-      "Diary CRUD: tagging, pinning, and quick keyword search",
-      "Responsive UI tuned for both mobile and desktop",
-    ],
-    links: {
-      demo: "ragdiary-9l5k6z95g-jsds-projects-f62cc082.vercel.app",
-      repo: "https://github.com/jsd-genkx/react-ai-notes-app-Front-end-Zynin43839",
-    },
-  },
+  // {
+  //   name: "RAG-Diary — Personal Diary App",
+  //   period: "Aug 2025",
+  //   description:
+  //     "A privacy-first journaling app for structured entries and fast search, presented in a clean, distraction-free interface.",
+  //   tech: ["React", "Node.js/Express", "MongoDB", "Tailwind", "ShardCn"],
+  //   highlights: [
+  //     "JWT login/logout with HTTP-only cookies and bcrypt-hashed passwords",
+  //     "Account-scoped, role-aware authorization with protected routes",
+  //     "Diary CRUD: tagging, pinning, and quick keyword search",
+  //     "Responsive UI tuned for both mobile and desktop",
+  //   ],
+  //   links: {
+  //     demo: "ragdiary-9l5k6z95g-jsds-projects-f62cc082.vercel.app",
+  //     repo: "https://github.com/jsd-genkx/react-ai-notes-app-Front-end-Zynin43839",
+  //   },
+  // },
 
   {
     name: "Treats & Whiskers — Low–Mid Weight Board Game inspired by Park (Board Game)",
