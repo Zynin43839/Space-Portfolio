@@ -42,7 +42,7 @@ export const projects = [
     name: "HugPaw — Pet Supply E-commerce (Group project in Generations Bootcamp)",
     period: "Aug 2025",
     description:
-      "An online storefront for customizable pet gear—collars, feeders, and water dispensers—with a polished, responsive UI and core admin tooling.",
+      "An online storefront for customizable pet collars, feeders, and water dispensers with a polished, responsive UI and core admin tooling.",
     tech: [
       "React",
       "Node.js/Express",
@@ -53,7 +53,7 @@ export const projects = [
     ],
     highlights: [
       "Session-secure auth (login/logout) using JWT with HTTP-only cookies; credentials hashed via bcrypt",
-      "Route guarding with shared auth middleware spanning account, cart, and checkout pipelines",
+      "Route guarding with auth middleware spanning userPage, and cart",
       "Role-based permissions (admin vs. user) with consistent API error handling throughout",
     ],
     links: {
