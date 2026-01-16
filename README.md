@@ -110,7 +110,7 @@ The Terminal UI includes a Home button on the title bar to return to /.
 
 - UI icons: lucide-react
 
-- Portfolio icon attribution (if used in the site):
+- Portfolio icon attribution:
   <a href="https://www.flaticon.com/free-icons/portfolio" title="portfolio icons">Portfolio icons created by Freepik - Flaticon</a>
 
 # 📜 License
