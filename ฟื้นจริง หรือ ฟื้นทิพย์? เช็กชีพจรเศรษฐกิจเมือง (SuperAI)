@@ -1,0 +1,37 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/Zynin43839/Space-Portfolio/blob/main/%E0%B8%9F%E0%B8%B7%E0%B9%89%E0%B8%99%E0%B8%88%E0%B8%A3%E0%B8%B4%E0%B8%87%20%E0%B8%AB%E0%B8%A3%E0%B8%B7%E0%B8%AD%20%E0%B8%9F%E0%B8%B7%E0%B9%89%E0%B8%99%E0%B8%97%E0%B8%B4%E0%B8%9E%E0%B8%A2%E0%B9%8C%3F%20%E0%B9%80%E0%B8%8A%E0%B9%87%E0%B8%81%E0%B8%8A%E0%B8%B5%E0%B8%9E%E0%B8%88%E0%B8%A3%E0%B9%80%E0%B8%A8%E0%B8%A3%E0%B8%A9%E0%B8%90%E0%B8%81%E0%B8%B4%E0%B8%88%E0%B9%80%E0%B8%A1%E0%B8%B7%E0%B8%AD%E0%B8%87%20(SuperAI)\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Data storytelling: ฟื้นจริง หรือ ฟื้นทิพย์? เช็กชีพจรเศรษฐกิจเมือง"
+      ],
+      "metadata": {
+        "id": "LBSQaori6GdL"
+      }
+    }
+  ],
+  "metadata": {
+    "colab": {
+      "name": "ยินดีต้อนรับสู่ Colab",
+      "toc_visible": true,
+      "provenance": [],
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "display_name": "Python 3",
+      "name": "python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 0
+}
